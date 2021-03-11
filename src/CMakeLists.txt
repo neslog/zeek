@@ -285,8 +285,6 @@ set(MAIN_SRCS
     Scope.cc
     ScriptCoverageManager.cc
     SerializationFormat.cc
-    Session.cc
-    Sessions.cc
     SmithWaterman.cc
     Stats.cc
     Stmt.cc
@@ -339,6 +337,9 @@ set(MAIN_SRCS
     script_opt/Stmt.cc
     script_opt/TempVar.cc
     script_opt/UseDefs.cc
+
+    session/Session.cc
+    session/SessionManager.cc
 
     nb_dns.c
     digest.h
