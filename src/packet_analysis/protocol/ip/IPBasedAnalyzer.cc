@@ -61,14 +61,18 @@ void IPBasedAnalyzer::ProcessConnectionICMP(const ConnID& conn_id, const Packet*
 
 	conn->CheckFlowLabel(is_orig, ip_hdr->FlowLabel());
 
-	zeek::ValPtr pkt_hdr_val = ip_hdr->ToPktHdrVal();
+	zeek::ValPtr pkt_hdr_val;
 
 	if ( ipv6_ext_headers && ip_hdr->NumHeaders() > 1 )
+		{
+		pkt_hdr_val = ip_hdr->ToPktHdrVal();
 		conn->EnqueueEvent(ipv6_ext_headers, nullptr, conn->GetVal(),
 		                   pkt_hdr_val);
+		}
 
 	if ( new_packet )
-		conn->EnqueueEvent(new_packet, nullptr, conn->GetVal(), std::move(pkt_hdr_val));
+		conn->EnqueueEvent(new_packet, nullptr, conn->GetVal(),
+		                   pkt_hdr_val ? std::move(pkt_hdr_val) : ip_hdr->ToPktHdrVal());
 
 	conn->SetRecordPackets(true);
 	conn->SetRecordContents(true);
@@ -142,14 +146,18 @@ void IPBasedAnalyzer::ProcessConnection(const ConnID& conn_id, const Packet* pkt
 
 	conn->CheckFlowLabel(is_orig, ip_hdr->FlowLabel());
 
-	zeek::ValPtr pkt_hdr_val = ip_hdr->ToPktHdrVal();
+	zeek::ValPtr pkt_hdr_val;
 
 	if ( ipv6_ext_headers && ip_hdr->NumHeaders() > 1 )
+		{
+		pkt_hdr_val = ip_hdr->ToPktHdrVal();
 		conn->EnqueueEvent(ipv6_ext_headers, nullptr, conn->GetVal(),
 		                   pkt_hdr_val);
+		}
 
 	if ( new_packet )
-		conn->EnqueueEvent(new_packet, nullptr, conn->GetVal(), std::move(pkt_hdr_val));
+		conn->EnqueueEvent(new_packet, nullptr, conn->GetVal(),
+		                   pkt_hdr_val ? std::move(pkt_hdr_val) : ip_hdr->ToPktHdrVal());
 
 	int record_packet = 1;	// whether to record the packet at all
 	int record_content = 1;	// whether to record its data
